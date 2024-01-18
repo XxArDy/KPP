@@ -1,4 +1,6 @@
 import 'package:client/presentation/pages/clients/client_page.dart';
+import 'package:client/presentation/pages/invoices/invoice_page.dart';
+import 'package:client/presentation/pages/rooms/room_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../logic/models/sorting_value.dart';
@@ -15,8 +17,8 @@ class _HomePageState extends State<HomePage> {
   SortingValue _sortingValue = SortingValue.asc;
   final List<Widget> _pages = [
     const ClientPage(),
-    // const SubjectPage(),
-    // const SessionPage(),
+    const RoomPage(),
+    const InvoicePage(),
   ];
 
   void _onItemTapped(int index) {
@@ -39,12 +41,11 @@ class _HomePageState extends State<HomePage> {
   Widget _updatePageSorting(Widget page, SortingValue sortingValue) {
     if (page is ClientPage) {
       return ClientPage(sortingValue: sortingValue);
+    } else if (page is RoomPage) {
+      return RoomPage(sortingValue: sortingValue);
+    } else if (page is InvoicePage) {
+      return InvoicePage(sortingValue: sortingValue);
     }
-    // else if (page is SubjectPage) {
-    //   return SubjectPage(sortingValue: sortingValue);
-    // } else if (page is SessionPage) {
-    //   return SessionPage(sortingValue: sortingValue);
-    // }
     return page;
   }
 
@@ -70,12 +71,12 @@ class _HomePageState extends State<HomePage> {
             label: 'Clients',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'Subjects',
+            icon: Icon(Icons.meeting_room),
+            label: 'Room',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.schedule),
-            label: 'Sessions',
+            icon: Icon(Icons.credit_score),
+            label: 'Invoice',
           ),
         ],
       ),

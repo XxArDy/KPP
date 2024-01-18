@@ -2,17 +2,18 @@ import 'dart:convert';
 
 import 'package:client/data/constants/string_constants.dart';
 import 'package:client/data/providers/data_provider.dart';
-import 'package:client/logic/models/client/client.dart';
+import 'package:client/logic/models/room/room.dart';
+import 'package:client/logic/models/room/room_type.dart';
 import 'package:client/logic/models/sorting_value.dart';
 import 'package:http/http.dart' as http;
 
-class ClientProvider implements DataProvider<Client> {
-  final String link = "${hostname}api/Client";
+class RoomProvider implements DataProvider<Room> {
+  final String link = "${hostname}api/Room";
 
-  const ClientProvider();
+  const RoomProvider();
 
   @override
-  Future<Client?> create(Client data) async {
+  Future<Room?> create(Room data) async {
     final response = await http.post(
       Uri.parse(link),
       body: jsonEncode(data.toJson()),
@@ -22,7 +23,7 @@ class ClientProvider implements DataProvider<Client> {
     );
 
     if (response.statusCode == 201) {
-      return Client.fromJson(jsonDecode(response.body));
+      return Room.fromJson(jsonDecode(response.body));
     }
     return null;
   }
@@ -31,16 +32,16 @@ class ClientProvider implements DataProvider<Client> {
   Future<String> delete(int id) async {
     final response = await http.delete(Uri.parse("$link/$id"));
     if (response.statusCode == 204) {
-      return "Client deleted successfully";
+      return "Room deleted successfully";
     }
     if (response.statusCode == 404) {
-      return "Client not found";
+      return "Room not found";
     }
     return "Error while deleting";
   }
 
   @override
-  Future<List<Client>?> getAll({
+  Future<List<Room>?> getAll({
     String? searchInput,
     SortingValue? sortingInput,
   }) async {
@@ -60,24 +61,24 @@ class ClientProvider implements DataProvider<Client> {
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
-      List<Client> clients = data.map((json) => Client.fromJson(json)).toList();
-      return clients;
+      List<Room> rooms = data.map((json) => Room.fromJson(json)).toList();
+      return rooms;
     }
     return null;
   }
 
   @override
-  Future<Client?> getById(int id) async {
+  Future<Room?> getById(int id) async {
     final response = await http.get(Uri.parse("$link/$id"));
 
     if (response.statusCode == 200) {
-      return Client.fromJson(jsonDecode(response.body));
+      return Room.fromJson(jsonDecode(response.body));
     }
     return null;
   }
 
   @override
-  Future<Client?> update(int id, Client newData) async {
+  Future<Room?> update(int id, Room newData) async {
     final response = await http.put(
       Uri.parse("$link/$id"),
       body: jsonEncode(newData.toJson()),
@@ -87,8 +88,21 @@ class ClientProvider implements DataProvider<Client> {
     );
 
     if (response.statusCode == 200) {
-      return Client.fromJson(jsonDecode(response.body));
+      return Room.fromJson(jsonDecode(response.body));
     }
+    return null;
+  }
+
+  Future<List<RoomType>?> getAllTypes() async {
+    final response = await http.get(Uri.parse("$link/allType"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      List<RoomType> types =
+          data.map((json) => RoomType.fromJson(json)).toList();
+      return types;
+    }
+
     return null;
   }
 }
