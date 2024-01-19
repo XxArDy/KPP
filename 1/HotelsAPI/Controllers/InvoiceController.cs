@@ -1,3 +1,4 @@
+using HotelsAPI.Models;
 using HotelsAPI.Models.Dto;
 using HotelsAPI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -81,24 +82,27 @@ public class InvoiceController : ControllerBase
 	/// <returns>List of invoices.</returns>
 	[HttpGet]
 	[ProducesResponseType(StatusCodes.Status200OK)]
-	public async Task<IActionResult> GetAllInvoices()
+	public async Task<IActionResult> GetAllInvoices(
+		[FromQuery] string? _search,
+		[FromQuery] SortingValue? _order
+	)
 	{
-		var invoices = await _invoiceService.GetAllInvoices();
+		var invoices = await _invoiceService.GetAllInvoices(_search, _order);
 		return Ok(invoices);
 	}
 
-	/// <summary>
-	/// Gets invoices by client phone.
-	/// </summary>
-	/// <param name="phone">The client phone number.</param>
-	/// <returns>List of invoices for the specified client.</returns>
-	[HttpGet("ByPhone/{phone}")]
-	[ProducesResponseType(StatusCodes.Status200OK)]
-	public async Task<IActionResult> GetAllInvoicesByPhone(string phone)
-	{
-		var invoices = await _invoiceService.GetAllInvoicesByPhone(phone);
-		return Ok(invoices);
-	}
+	// /// <summary>
+	// /// Gets invoices by client phone.
+	// /// </summary>
+	// /// <param name="phone">The client phone number.</param>
+	// /// <returns>List of invoices for the specified client.</returns>
+	// [HttpGet("ByPhone/{phone}")]
+	// [ProducesResponseType(StatusCodes.Status200OK)]
+	// public async Task<IActionResult> GetAllInvoicesByPhone(string phone)
+	// {
+	// 	var invoices = await _invoiceService.GetAllInvoicesByPhone(phone);
+	// 	return Ok(invoices);
+	// }
 
 	/// <summary>
 	/// Updates an existing invoice.
@@ -176,4 +180,19 @@ public class InvoiceController : ControllerBase
 		var isAvailable = await _invoiceService.IsRoomAvailable(roomId, dateStart, dateEnd);
 		return Ok(isAvailable);
 	}
+
+	// /// <summary>
+	// /// Get amount.
+	// /// </summary>
+	// /// <param name="roomId">The room ID.</param>
+	// /// <param name="dateStart">The start date of the reservation.</param>
+	// /// <param name="dateEnd">The end date of the reservation.</param>
+	// /// <returns>Invoice amount</returns>
+	// [HttpGet("GetAmount")]
+	// [ProducesResponseType(StatusCodes.Status200OK)]
+	// public async Task<IActionResult> GetAmount(int roomId, DateTime dateStart, DateTime dateEnd)
+	// {
+	// 	var isAvailable = await _invoiceService.get(roomId, dateStart, dateEnd);
+	// 	return Ok(isAvailable);
+	// }
 }

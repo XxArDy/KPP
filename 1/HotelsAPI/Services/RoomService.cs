@@ -45,9 +45,39 @@ public class RoomService : IRoomService
         return true;
     }
 
-    public async Task<List<Room>> GetAllRooms()
+    public async Task<List<Room>> GetAllRooms(string? searchInput, SortingValue? sortingInput)
     {
-        return await _dbContext.Rooms.Include(room => room.Type).ToListAsync();
+        List<Room> query = await _dbContext.Rooms.Include(room => room.Type).ToListAsync();
+
+        if (!string.IsNullOrEmpty(searchInput))
+        {
+            int.TryParse(searchInput, out var num);
+            query = query.Where(room =>
+                room.Number == num ||
+                room.Type.Name.Contains(searchInput, StringComparison.OrdinalIgnoreCase) ||
+                room.Description.Contains(searchInput, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        if (sortingInput != null)
+        {
+            switch (sortingInput)
+            {
+                case SortingValue.asc:
+                    query = query.OrderBy(room => room.Number).ToList();
+                    break;
+                case SortingValue.desc:
+                    query = query.OrderByDescending(room => room.Number).ToList();
+                    break;
+            }
+        }
+
+        return query;
+    }
+
+
+    public async Task<List<RoomType>> GetAllRoomTypes()
+    {
+        return await _dbContext.RoomTypes.ToListAsync();
     }
 
     public async Task<Room?> GetRoomByID(int id)

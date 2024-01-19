@@ -5,7 +5,7 @@ namespace HotelsAPI.Services;
 
 public interface IClientService
 {
-    Task<List<Client>> GetAllClients();
+    Task<List<Client>> GetAllClients(string? searchInput, SortingValue? sortingInput);
 
     Task<Client?> GetClientByID(int id);
 

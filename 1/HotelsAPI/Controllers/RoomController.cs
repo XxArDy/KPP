@@ -1,3 +1,4 @@
+using HotelsAPI.Models;
 using HotelsAPI.Models.Dto;
 using HotelsAPI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -29,9 +30,11 @@ public class RoomController : ControllerBase
 	/// <response code="200">Returns list of rooms</response>
 	[HttpGet]
 	[ProducesResponseType(StatusCodes.Status200OK)]
-	public async Task<IActionResult> GetAllRooms()
+	public async Task<IActionResult> GetAllRooms(
+		[FromQuery] string? _search,
+		[FromQuery] SortingValue? _order)
 	{
-		var rooms = await _roomService.GetAllRooms();
+		var rooms = await _roomService.GetAllRooms(_search, _order);
 		return Ok(rooms);
 	}
 
@@ -134,5 +137,18 @@ public class RoomController : ControllerBase
 			return NotFound();
 		}
 		return NoContent();
+	}
+
+	/// <summary>
+	/// Get all room types.
+	/// </summary>
+	/// <returns>List of room types</returns>
+	/// <response code="200">Returns the list of room types</response>
+	[HttpGet("allType")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	public async Task<IActionResult> GetAllRoomTypes()
+	{
+		var types = await _roomService.GetAllRoomTypes();
+		return Ok(types);
 	}
 }

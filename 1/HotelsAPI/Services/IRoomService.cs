@@ -5,7 +5,7 @@ namespace HotelsAPI.Services;
 
 public interface IRoomService
 {
-    Task<List<Room>> GetAllRooms();
+    Task<List<Room>> GetAllRooms(string? searchInput, SortingValue? sortingInput);
 
     Task<Room?> GetRoomByID(int id);
 
@@ -14,4 +14,5 @@ public interface IRoomService
     Task<Room?> UpdateRoom(int id, RoomDto obj);
 
     Task<bool> DeleteRoomByID(int id);
+    Task<List<RoomType>> GetAllRoomTypes();
 }
