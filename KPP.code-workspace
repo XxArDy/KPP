@@ -10,10 +10,13 @@
 			"path": "3/parser"
 		},
 		{
-			"path": "4/client"
+			"path": "5/mobile_app"
 		},
 		{
-			"path": "5/mobile_app"
+			"path": "4/client_desktop"
+		},
+		{
+			"path": "6/client_mobile"
 		}
 	],
 	"settings": {}
