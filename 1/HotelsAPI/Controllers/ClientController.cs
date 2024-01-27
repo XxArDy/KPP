@@ -30,9 +30,11 @@ public class ClientController : ControllerBase
 	/// <response code="200">Returns list of clients</response>
 	[HttpGet]
 	[ProducesResponseType(StatusCodes.Status200OK)]
-	public async Task<IActionResult> GetAllClients()
+	public async Task<IActionResult> GetAllClients(
+		[FromQuery] string? _search,
+		[FromQuery] SortingValue? _order)
 	{
-		var clients = await _clientService.GetAllClients();
+		var clients = await _clientService.GetAllClients(_search, _order);
 		return Ok(clients);
 	}
 

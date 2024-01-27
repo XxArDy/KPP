@@ -22,8 +22,8 @@ public class InvoiceService : IInvoiceService
             {
                 RoomId = obj.RoomId,
                 ClientId = obj.ClientId,
-                DateStart = obj.DateStart,
-                DateEnd = obj.DateEnd,
+                DateStart = DateTime.SpecifyKind(obj.DateStart, DateTimeKind.Utc),
+                DateEnd = DateTime.SpecifyKind(obj.DateEnd, DateTimeKind.Utc),
                 Amount = await CalculateAmount(obj.RoomId, obj.DateStart, obj.DateEnd)
             };
 
@@ -58,20 +58,35 @@ public class InvoiceService : IInvoiceService
         return true;
     }
 
-    public async Task<List<Invoice>> GetAllInvoices()
+    public async Task<List<Invoice>> GetAllInvoices(string? searchInput, SortingValue? sortingInput)
     {
-        return await _dbContext.Invoices.Include(i => i.Client).Include(i => i.Room).Include(i => i.Room!.Type).ToListAsync();
-    }
+        List<Invoice> query = await _dbContext.Invoices.Include(i => i.Client).Include(i => i.Room).Include(i => i.Room!.Type).ToListAsync();
 
-    public async Task<List<Invoice>> GetAllInvoicesByPhone(string phone)
-    {
-        return await _dbContext.Invoices
-            .Include(i => i.Client)
-            .Where(i => i.Client!.Phone!.Contains(phone))
-            .Include(i => i.Client)
-            .Include(i => i.Room)
-            .Include(i => i.Room!.Type)
-            .ToListAsync();
+        if (!string.IsNullOrEmpty(searchInput))
+        {
+            int.TryParse(searchInput, out var num);
+            query = query.Where(invoice =>
+                    invoice.Client!.FirstName!.Contains(searchInput, StringComparison.OrdinalIgnoreCase) ||
+                    invoice.Client!.LastName!.Contains(searchInput, StringComparison.OrdinalIgnoreCase) ||
+                    invoice.Client!.Phone!.Contains(searchInput, StringComparison.OrdinalIgnoreCase) ||
+                    invoice.Room!.Number == num ||
+                    invoice.Room!.Type!.Name!.Contains(searchInput, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        if (sortingInput != null)
+        {
+            switch (sortingInput)
+            {
+                case SortingValue.asc:
+                    query = query.OrderBy(invoice => invoice.Id).ToList();
+                    break;
+                case SortingValue.desc:
+                    query = query.OrderByDescending(invoice => invoice.Id).ToList();
+                    break;
+            }
+        }
+
+        return query;
     }
 
     public async Task<Invoice?> GetInvoiceByID(int id)
@@ -92,8 +107,8 @@ public class InvoiceService : IInvoiceService
 
             invoice.RoomId = obj.RoomId;
             invoice.ClientId = obj.ClientId;
-            invoice.DateStart = obj.DateStart;
-            invoice.DateEnd = obj.DateEnd;
+            invoice.DateStart = DateTime.SpecifyKind(obj.DateStart, DateTimeKind.Utc);
+            invoice.DateEnd = DateTime.SpecifyKind(obj.DateEnd, DateTimeKind.Utc);
             invoice.Amount = await CalculateAmount(obj.RoomId, obj.DateStart, obj.DateEnd);
 
             await _dbContext.SaveChangesAsync();
@@ -108,11 +123,14 @@ public class InvoiceService : IInvoiceService
 
     public async Task<bool> IsRoomAvailable(int roomId, DateTime dateStart, DateTime dateEnd, int? currentInvoiceId = null)
     {
+        dateStart = DateTime.SpecifyKind(dateStart, DateTimeKind.Utc);
+        dateEnd = DateTime.SpecifyKind(dateEnd, DateTimeKind.Utc);
+
         var overlappingInvoice = await _dbContext.Invoices
             .Where(i => i.RoomId == roomId && i.Id != currentInvoiceId &&
                         ((dateStart >= i.DateStart && dateStart < i.DateEnd) ||
-                         (dateEnd > i.DateStart && dateEnd <= i.DateEnd) ||
-                         (dateStart <= i.DateStart && dateEnd >= i.DateEnd)))
+                        (dateEnd > i.DateStart && dateEnd <= i.DateEnd) ||
+                        (dateStart <= i.DateStart && dateEnd >= i.DateEnd)))
             .FirstOrDefaultAsync();
 
         return overlappingInvoice == null;

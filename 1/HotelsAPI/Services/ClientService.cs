@@ -53,9 +53,32 @@ public class ClientService : IClientService
         return true;
     }
 
-    public async Task<List<Client>> GetAllClients()
+    public async Task<List<Client>> GetAllClients(string? searchInput, SortingValue? sortingInput)
     {
-        return await _dbContext.Clients.ToListAsync();
+        IQueryable<Client> query = _dbContext.Clients;
+
+        if (!string.IsNullOrEmpty(searchInput))
+        {
+            query = query.Where(client =>
+                client.FirstName!.ToLower().Contains(searchInput.ToLower()) ||
+                client.LastName!.ToLower().Contains(searchInput.ToLower()) ||
+                client.Phone!.ToLower().Contains(searchInput.ToLower()));
+        }
+
+        if (sortingInput != null)
+        {
+            switch (sortingInput)
+            {
+                case SortingValue.asc:
+                    query = query.OrderBy(client => client.FirstName);
+                    break;
+                case SortingValue.desc:
+                    query = query.OrderByDescending(client => client.FirstName);
+                    break;
+            }
+        }
+
+        return await query.ToListAsync();
     }
 
     public async Task<Client?> GetClientByID(int id)

@@ -5,9 +5,7 @@ namespace HotelsAPI.Services;
 
 public interface IInvoiceService
 {
-    Task<List<Invoice>> GetAllInvoicesByPhone(string phone);
-
-    Task<List<Invoice>> GetAllInvoices();
+    Task<List<Invoice>> GetAllInvoices(string? searchInput, SortingValue? sortingInput);
 
     Task<Invoice?> GetInvoiceByID(int id);
 
