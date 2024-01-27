@@ -12,6 +12,7 @@ Room _$RoomFromJson(Map<String, dynamic> json) => Room(
       typeId: json['typeId'] as int,
       description: json['description'] as String?,
       price: (json['price'] as num).toDouble(),
+      image: json['image'] as String?,
     );
 
 Map<String, dynamic> _$RoomToJson(Room instance) => <String, dynamic>{
@@ -20,4 +21,5 @@ Map<String, dynamic> _$RoomToJson(Room instance) => <String, dynamic>{
       'typeId': instance.typeId,
       'description': instance.description,
       'price': instance.price,
+      'image': instance.image,
     };

@@ -9,6 +9,7 @@ class Room {
   int typeId;
   String? description;
   double price;
+  String? image;
 
   Room({
     required this.id,
@@ -16,6 +17,7 @@ class Room {
     required this.typeId,
     this.description,
     required this.price,
+    this.image,
   });
 
   factory Room.fromJson(Map<String, dynamic> json) => _$RoomFromJson(json);
@@ -28,6 +30,7 @@ class Room {
     int? typeId,
     String? description,
     double? price,
+    String? image,
   }) {
     return Room(
       id: id ?? this.id,
@@ -35,6 +38,7 @@ class Room {
       description: description ?? this.description,
       price: price ?? this.price,
       typeId: typeId ?? this.typeId,
+      image: image ?? this.image,
     );
   }
 }
