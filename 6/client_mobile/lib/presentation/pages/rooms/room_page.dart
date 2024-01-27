@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:client_mobile/data/providers/room_provider.dart';
 import 'package:client_mobile/logic/models/room/room.dart';
 import 'package:client_mobile/logic/models/sorting_value.dart';
+import 'package:client_mobile/logic/view_type.dart';
 import 'package:client_mobile/presentation/pages/rooms/room_add_edit_page.dart';
 import 'package:client_mobile/presentation/widgets/my_room_dialog.dart';
 import 'package:client_mobile/presentation/widgets/my_search_bar.dart';
@@ -18,8 +19,6 @@ class RoomPage extends StatefulWidget {
   @override
   State<RoomPage> createState() => _RoomPageState();
 }
-
-enum ViewType { list, cards }
 
 class _RoomPageState extends State<RoomPage> {
   final _repository = const RoomProvider();
