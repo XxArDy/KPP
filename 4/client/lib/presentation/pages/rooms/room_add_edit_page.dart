@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:client/data/providers/room_provider.dart';
 import 'package:client/logic/models/room/room.dart';
 import 'package:client/logic/models/room/room_type.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class RoomAddEditPage extends StatefulWidget {
   const RoomAddEditPage({Key? key, this.roomToEdit}) : super(key: key);
@@ -18,6 +22,19 @@ class _RoomAddEditPageState extends State<RoomAddEditPage> {
   late TextEditingController _priceController;
   int? _selectedTypeId;
   final _repository = const RoomProvider();
+  String? _imageBase64;
+
+  Future<void> _pickImage() async {
+    final imagePicker = ImagePicker();
+    final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
+      setState(() {
+        _imageBase64 = base64Encode(Uint8List.fromList(bytes));
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -54,6 +71,10 @@ class _RoomAddEditPageState extends State<RoomAddEditPage> {
             TextField(
               controller: _priceController,
               decoration: const InputDecoration(labelText: 'Price'),
+            ),
+            ElevatedButton(
+              onPressed: _pickImage,
+              child: const Text('Pick Image'),
             ),
             const SizedBox(height: 16),
             FutureBuilder<List<RoomType>?>(
@@ -95,6 +116,7 @@ class _RoomAddEditPageState extends State<RoomAddEditPage> {
                     description: _descriptionController.text,
                     price: double.tryParse(_priceController.text) ?? 0.0,
                     typeId: _selectedTypeId ?? 0,
+                    image: _imageBase64 ?? '',
                   );
                   await _repository.create(newRoom);
                 } else {
@@ -103,6 +125,7 @@ class _RoomAddEditPageState extends State<RoomAddEditPage> {
                     description: _descriptionController.text,
                     price: double.tryParse(_priceController.text) ?? 0.0,
                     typeId: _selectedTypeId ?? 0,
+                    image: _imageBase64 ?? '',
                   );
                   await _repository.update(updatedRoom.id, updatedRoom);
                 }

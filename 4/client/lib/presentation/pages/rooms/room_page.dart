@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:client/data/providers/room_provider.dart';
 import 'package:client/logic/models/room/room.dart';
 import 'package:client/logic/models/sorting_value.dart';
@@ -56,6 +59,18 @@ class _RoomPageState extends State<RoomPage> {
                       final item = rooms[index];
 
                       return ListTile(
+                        leading: item.image != null
+                            ? Image.memory(
+                                Uint8List.fromList(base64Decode(item.image!)),
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                              )
+                            : Container(
+                                width: 50,
+                                height: 50,
+                                color: Colors.grey,
+                              ),
                         title: Text(
                           'Room ${item.number}',
                         ),
