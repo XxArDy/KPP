@@ -7,6 +7,7 @@ public class Room
     public int TypeId { get; set; }
     public string? Description { get; set; }
     public required float Price { get; set; }
+    public string? Image { get; set; }
 
     public RoomType? Type { get; set; }
 }

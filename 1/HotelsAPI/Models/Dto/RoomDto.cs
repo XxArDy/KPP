@@ -6,4 +6,5 @@ public class RoomDto
     public int TypeId { get; set; }
     public string? Description { get; set; }
     public required float Price { get; set; }
+    public string? Image { get; set; }
 }

@@ -21,7 +21,8 @@ public class RoomService : IRoomService
             Number = obj.Number,
             TypeId = obj.TypeId,
             Description = obj.Description,
-            Price = obj.Price
+            Price = obj.Price,
+            Image = obj.Image
         };
 
         _dbContext.Rooms.Add(room);
@@ -98,6 +99,7 @@ public class RoomService : IRoomService
         room.TypeId = obj.TypeId;
         room.Description = obj.Description;
         room.Price = obj.Price;
+        room.Image = obj.Image;
 
         await _dbContext.SaveChangesAsync();
 
