@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "4/client"
+		},
+		{
+			"path": "5/mobile_app"
 		}
 	],
 	"settings": {}
