@@ -1,6 +1,7 @@
 import 'package:client_mobile/data/providers/invoice_provider.dart';
 import 'package:client_mobile/logic/models/invoice/invoice.dart';
 import 'package:client_mobile/logic/models/sorting_value.dart';
+import 'package:client_mobile/logic/view_type.dart';
 import 'package:client_mobile/presentation/pages/invoices/invoice_add_edit_page.dart';
 import 'package:client_mobile/presentation/widgets/my_invoice_dialog.dart';
 import 'package:client_mobile/presentation/widgets/my_search_bar.dart';
@@ -15,8 +16,6 @@ class InvoicePage extends StatefulWidget {
   @override
   State<InvoicePage> createState() => _InvoicePageState();
 }
-
-enum ViewType { list, cards }
 
 class _InvoicePageState extends State<InvoicePage> {
   final _repository = const InvoiceProvider();

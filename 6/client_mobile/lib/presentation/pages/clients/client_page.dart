@@ -1,6 +1,7 @@
 import 'package:client_mobile/data/providers/client_provider.dart';
 import 'package:client_mobile/logic/models/client/client.dart';
 import 'package:client_mobile/logic/models/sorting_value.dart';
+import 'package:client_mobile/logic/view_type.dart';
 import 'package:client_mobile/presentation/pages/clients/client_add_edit_page.dart';
 import 'package:client_mobile/presentation/widgets/my_client_dialog.dart';
 import 'package:client_mobile/presentation/widgets/my_search_bar.dart';
@@ -16,13 +17,11 @@ class ClientPage extends StatefulWidget {
   State<ClientPage> createState() => _ClientPageState();
 }
 
-enum ViewType { list, cards }
-
 class _ClientPageState extends State<ClientPage> {
   final _repository = const ClientProvider();
   final _searchController = TextEditingController();
   String _searchQuery = "";
-  ViewType _currentView = ViewType.list; // Default to list view
+  ViewType _currentView = ViewType.list;
 
   @override
   Widget build(BuildContext context) {
